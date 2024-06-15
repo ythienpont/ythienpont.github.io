@@ -1,1 +1,56 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="shortcut icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" rel="stylesheet"/><meta name="theme-color" content="#000000"/><meta name="description" content="My name is Yonah Thienpont. I am a student computer science at the University of Antwerp. From a young age, I have been fascinated by the inner workings of computers and other technology. This passion has driven me to pursue a carreer in Computer Science, and I am excited to bring my enthusiasm and knowledge to the workforce."/><link rel="apple-touch-icon" href="logo192.png"/><link rel="manifest" href="/manifest.json"/><meta property="twitter:image" content="/social-image.png"/><meta property="og:image" content="/social-image.png"/><title>Yonah Thienpont</title><script defer="defer" src="/static/js/main.bfeae999.js"></script><link href="/static/css/main.778eeed7.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yonah Thienpont</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+      <div class="home-container">
+        <aside class="sidebar">
+            <header>
+                <h2>Yonah Thienpont</h2>
+                <p>Student Computer Science at UAntwerpen.</p>
+            </header>
+            <nav class="links">
+                <a href="#">GitHub</a>
+                <a href="#">YouTube</a>
+                <a href="#">Mail</a>
+            </nav>
+        </aside>
+        <main class="content">
+            <h1>Articles</h1>
+            <section id="articles-container"></section>
+        </main>
+      </div>
+    <script>
+        // Function to fetch and render articles
+        async function fetchAndRenderArticles() {
+            try {
+                const response = await fetch('articles.json'); // Fetch the JSON file
+                const articles = await response.json(); // Parse the JSON data
+
+                const container = document.getElementById('articles-container');
+                articles.forEach(article => {
+                    const articleHTML = `
+                        <a href="${article.link}" class="article-link">
+                            <article class="article">
+                                <p class="article-date">${article.date}</p>
+                                <h2>${article.title}</h2>
+                                <p>${article.excerpt}</p>
+                            </article>
+                        </a>
+                    `;
+                    container.innerHTML += articleHTML;
+                });
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+            }
+        }
+
+        // Fetch and render articles on page load
+        document.addEventListener('DOMContentLoaded', fetchAndRenderArticles);
+    </script>
+</body>
+</html>
