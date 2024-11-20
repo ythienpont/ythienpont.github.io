@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatically Hosting Compiled LaTeX Documents using GitHub Pages</title>
+    <link rel="stylesheet" href="../styles.css">
+    <!-- Prism.js CSS for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="article-header">
+            <div class="header-navigation">
+                <a href="../index.html" class="back-link">← All Articles</a>
+                <p class="article-date">November 20, 2024</p>
+            </div>
+            <h1>Automatically Hosting Compiled LaTeX Documents Using GitHub Pages</h1>
+        </div>
+        <div class="article-content">
+            <p>As a student, I often share my summaries and solutions to exams with my classmates. This year, when creating a collaborative repository, I realized that I needed to host the compiled LaTeX PDFs elsewhere to avoid merge conflicts. However, I also wanted to keep it easily accessible for less tech-savvy classmates who may not be familiar with LaTeX. The solution? Hosting the compiled PDF on GitHub Pages.</p>
+
+						<p><a href="https://pages.github.com/">GitHub Pages</a> is a free service that allows you to host static files, making it perfect for this purpose. In this article, I will walk you through the process of automatically hosting your compiled LaTeX documents on GitHub Pages using GitHub Actions.</p>
+
+            <h2>Setting Up GitHub Pages</h2>
+            <p>First, I enabled GitHub Pages for my repository by creating a special branch called <code>gh-pages</code>. This branch will hold the compiled PDFs and any other assets I want to make available through the Pages service.</p>
+
+            <h2>Setting Up the GitHub Actions Workflow</h2>
+            <p>Next, I created a GitHub Actions workflow to automatically compile the LaTeX document whenever changes are pushed to the <code>main</code> branch of the repository. The workflow also ensures that the compiled PDF is deployed to the <code>gh-pages</code> branch. Here's how the workflow looks:</p>
+
+            <div class="code-fragment">
+                <pre><code class="language-yaml">
+name: Build and Deploy LaTeX Document
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Compile the LaTeX document
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          work_in_root_file_dir: true
+
+      # Checkout gh-pages branch
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # Copy the compiled PDF to the gh-pages branch
+      - name: Copy compiled PDF to gh-pages
+        run: |
+          cp main.pdf gh-pages/
+          
+      # Remove the PDF from the main branch
+      - name: Remove main.pdf from main branch
+        run: |
+          rm main.pdf
+
+      # Commit and push the changes to gh-pages
+      - name: Commit and push PDF to gh-pages
+        run: |
+          cd gh-pages
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -f main.pdf
+          git commit -m "Deploy compiled PDF"
+          git push
+                </code></pre>
+            </div>
+
+            <p>With this workflow in place, every time I push changes to the main branch, the LaTeX document is automatically compiled, and the resulting PDF is pushed to the <code>gh-pages</code> branch for hosting.</p>
+
+            <h2>Accessing the Compiled PDF</h2>
+						<p>Once the compiled PDF is hosted on GitHub Pages, you can access it directly from the URL of the repository's Pages site by it's path. However, you could also a provide an <code>index.html</code> that redirects the <code>/</code> path to the file you want to host. I did something like</p>
+
+						<div class="code-fragment">
+							<pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Redirect&lt;/title&gt;
+    &lt;meta http-equiv="refresh" content="0; url=https://path/to/file.pdf"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;Redirecting to PDF. If you are not redirected immediately, click &lt;a href="https://path/to/file.pdf"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+						</code></pre>
+						</div>
+						<p>I hope you found this information helpful! As a student, I highly encourage you to share your knowledge and solutions with others, while always respecting intellectual property. Collaborative learning fosters growth and enhances understanding, and it's worth noting that providing detailed solutions for each problem is no small task for teachers. If you spot any mistakes or have suggestions for improvement, please feel free to reach out—I’d love to hear from you!</p>
+        </div>
+    </div>
+    <!-- Prism.js JS for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <!-- Include specific language support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-yaml.min.js"></script>
+</body>
+</html>

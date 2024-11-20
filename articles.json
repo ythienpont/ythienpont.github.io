@@ -1,8 +1,8 @@
 [
     {
-        "date": "June 15, 2024",
-        "title": "Lorem Ipsum",
-        "excerpt": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-        "link": "articles/article.html"
+        "date": "November 20, 2024",
+        "title": "Automatically Hosting Compiled LaTeX Documents Using GitHub Pages",
+        "excerpt": "As a student, I often share my summaries and solutions to exams with my classmates. This year, when creating a collaborative repository, I realized that I needed to host the compiled LaTeX PDFs elsewhere to avoid merge conflicts.",
+        "link": "articles/compiled-pdf.html"
     }
 ]
